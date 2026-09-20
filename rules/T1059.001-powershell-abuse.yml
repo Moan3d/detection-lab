@@ -1,0 +1,34 @@
+title: Suspicious PowerShell Execution
+id: a2f93e6a-b4c1-48d2-9e31-7c4f8b2e1d09
+status: experimental
+description: Detects suspicious PowerShell execution patterns used by attackers
+    to download and execute code, bypass defenses, or run encoded commands.
+author: Mohaned
+date: 2026-09-20
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+        CommandLine|contains:
+            - '-EncodedCommand'
+            - '-enc '
+            - 'DownloadString'
+            - 'IEX'
+            - 'Invoke-Expression'
+            - 'bypass'
+            - 'hidden'
+            - 'FromBase64String'
+    condition: selection
+falsepositives:
+    - Legitimate admin scripts
+    - Software installers
+level: medium
