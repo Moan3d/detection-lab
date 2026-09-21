@@ -1,0 +1,58 @@
+title: Known Malicious Cmdlets
+id: a2f93e6a-b4c1-48d2-9e31-7c4f8b2e1d09
+status: experimental
+description: Detects Known Malicious Cmdlets Used by Attckers to run Mlicious software such as Mimikatz 
+author: Mohaned Bakri 
+date: 2026-09-21
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+    - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1059.001/T1059.001.md#atomic-test-18-powershell-invoke-known-malicious-cmdlets
+tags:
+    - attack.execution
+    - attack.t1059.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+        CommandLine|contains:
+            - 'Add-Persistence'
+            - 'Find-AVSignature'
+            - 'Get-GPPAutologon'
+            - 'Get-GPPPassword'
+            - 'Get-HttpStatus'
+            - 'Get-Keystrokes'
+            - 'Get-SecurityPackages'
+            - 'Get-TimedScreenshot'
+            - 'Get-VaultCredential'
+            - 'Get-VolumeShadowCopy'
+            - 'Install-SSP'
+            - 'Invoke-CredentialInjection'
+            - 'Invoke-DllInjection'
+            - 'Invoke-Mimikatz'
+            - 'Invoke-NinjaCopy'
+            - 'Invoke-Portscan'
+            - 'Invoke-ReflectivePEInjection'
+            - 'Invoke-ReverseDnsLookup'
+            - 'Invoke-Shellcode'
+            - 'Invoke-TokenManipulation'
+            - 'Invoke-WmiCommand'
+            - 'Mount-VolumeShadowCopy'
+            - 'New-ElevatedPersistenceOption'
+            - 'New-UserPersistenceOption'
+            - 'New-VolumeShadowCopy'
+            - 'Out-CompressedDll'
+            - 'Out-EncodedCommand'
+            - 'Out-EncryptedScript'
+            - 'Out-Minidump'
+            - 'PowerUp'
+            - 'PowerView'
+            - 'Remove-Comments'
+            - 'Remove-VolumeShadowCopy'
+            - 'Set-CriticalProcess'
+            - 'Set-MasterBootRecord'
+    condition: selection
+level: medium
