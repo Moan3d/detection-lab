@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: write
+
 jobs:
   validate-and-compile:
     runs-on: ubuntu-latest
@@ -22,10 +25,22 @@ jobs:
 
       - name: Compile to Splunk SPL
         run: |
-          sigma convert -t splunk -p splunk_windows rules/ > compiled/splunk/all_rules.spl
+          mkdir -p compiled/splunk/by_technique
 
-      - name: Upload compiled rules as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: splunk-rules
-          path: compiled/splunk/all_rules.spl
+          # Combined file
+          sigma convert -t splunk -p splunk_windows rules/ \
+            > compiled/splunk/all_rules.spl
+
+          # Individual files
+          for rule in rules/*.yml; do
+            name=$(basename "$rule" .yml)
+            sigma convert -t splunk -p splunk_windows "$rule" \
+              > "compiled/splunk/by_technique/${name}.spl"
+          done
+      - name: Commit compiled rules back to repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add compiled/splunk/all_rules.spl
+          git diff --staged --quiet || git commit -m "ci: auto-compile sigma rules to splunk SPL"
+          git push
