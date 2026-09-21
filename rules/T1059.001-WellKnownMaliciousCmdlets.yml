@@ -1,5 +1,5 @@
 title: Known Malicious Cmdlets
-id: a2f93e6a-b4c1-48d2-9e31-7c4f8b2e1d09
+id: a38c0683-3ad0-47dc-b6f3-d3d3dc3e51ce 
 status: experimental
 description: Detects Known Malicious Cmdlets Used by Attckers to run Mlicious software such as Mimikatz 
 author: Mohaned Bakri 
