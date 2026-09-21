@@ -14,7 +14,7 @@ logsource:
     category: process_creation
     product: windows
 detection:
-    selection:
+    selection_suspicious_args:
         Image|endswith:
             - '\powershell.exe'
             - '\pwsh.exe'
@@ -24,10 +24,21 @@ detection:
             - 'DownloadString'
             - 'IEX'
             - 'Invoke-Expression'
-            - 'bypass'
-            - 'hidden'
+            - '-WindowStyle Hidden'
+            - 'Net.WebClient'
             - 'FromBase64String'
-    condition: selection
+            - '-NonInteractive'
+            - 'bypass'
+            - 'Invoke-WebRequest'
+            - '-NoLogo'
+    selection_hidden:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\pwsh.exe'
+        CommandLine|contains|all:
+            - '-w '
+            - 'hidden'
+    condition: selection_suspicious_args or selection_hidden
 falsepositives:
     - Legitimate admin scripts
     - Software installers
