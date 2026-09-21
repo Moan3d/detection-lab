@@ -1,0 +1,1 @@
+(Image IN ("*\\powershell.exe", "*\\pwsh.exe") CommandLine IN ("*-EncodedCommand*", "*-enc *", "*DownloadString*", "*IEX*", "*Invoke-Expression*", "*-WindowStyle Hidden*", "*Net.WebClient*", "*FromBase64String*", "*-NonInteractive*", "*bypass*", "*Invoke-WebRequest*", "*-NoLogo*")) OR (Image IN ("*\\powershell.exe", "*\\pwsh.exe") CommandLine="*-w *" CommandLine="*hidden*")
