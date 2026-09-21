@@ -1,7 +1,7 @@
 title: Known Malicious Cmdlets
 id: a38c0683-3ad0-47dc-b6f3-d3d3dc3e51ce 
 status: experimental
-description: Detects Known Malicious Cmdlets Used by Attckers to run Mlicious software such as Mimikatz 
+description: Detects known malicious PowerShell cmdlets used by attackers, including PowerSploit, PowerView, and Mimikatz invocations.
 author: Mohaned Bakri 
 date: 2026-09-21
 references:
@@ -55,4 +55,4 @@ detection:
             - 'Set-CriticalProcess'
             - 'Set-MasterBootRecord'
     condition: selection
-level: medium
+level: high
