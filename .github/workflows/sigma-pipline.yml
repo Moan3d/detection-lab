@@ -1,0 +1,31 @@
+name: Sigma Validate and Compile
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-and-compile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install sigma-cli
+        run: pip install sigma-cli pySigma-backend-splunk
+
+      - name: Validate all rules
+        run: sigma check rules/
+
+      - name: Compile to Splunk SPL
+        run: |
+          sigma convert -t splunk -p splunk_windows rules/ > compiled/splunk/all_rules.spl
+
+      - name: Upload compiled rules as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: splunk-rules
+          path: compiled/splunk/all_rules.spl
