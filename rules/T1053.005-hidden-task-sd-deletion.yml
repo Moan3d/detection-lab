@@ -1,0 +1,41 @@
+title: Hiding scheduled-task attept
+id: 5d57d60d-1c7f-432a-92db-862ef63cdd4a
+status: experimental
+description: detect attepts to hide scheduled-task by manipulating registry 
+author: Mohaned Bakri
+date: 2026-09-27
+references:
+    - 'https://attack.mitre.org/techniques/T1053/005/'
+    - 'https://redcanary.com/threat-detection-report/techniques/scheduled-task/1'
+    - 'https://ridgelinecyber.com/blog/detecting-malicious-scheduled-tasks/'
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1053.005
+
+logsource:
+    product: windows
+    category: registry_event
+detection:
+    selection_modification:
+        EventID: 13
+        TargetObject|contains: '\Schedule\TaskCache\Tree\'
+        TargetObject|endswith:
+            - '\Index'
+            - '\SD'
+            
+    selection_deletion:
+        EventID: 12
+        TargetObject|contains: '\Schedule\TaskCache\Tree\'
+        TargetObject|endswith:
+            - '\Index'
+            - '\SD'
+
+    # Optional: Filter out normal Task Scheduler service activity if it causes false positives
+    filter_system:
+        Image|endswith: '\svchost.exe'
+        
+    condition: (selection_modification or selection_deletion) and not filter_system
+falsepositives:
+    - Legitimate third-party software managing scheduled tasks via registry (rare)
+level: high

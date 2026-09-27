@@ -1,0 +1,27 @@
+title: Suspicious Scheduled Task Creation via at.exe
+id: 5ab19544-d3b0-4e9d-8798-27572dabe575
+status: experimental
+description: detect attepts to Persistence using deprecated at command. 
+author: Mohaned Bakri
+date: 2026-09-27
+references:
+  - 'https://attack.mitre.org/techniques/T1053/002/ '
+  - 'https://dmcxblue.gitbook.io/red-team-notes-2-0/red-team-techniques/execution/t1053-scheduled-tasks-job/at-windows'
+tags:
+  - attack.persistence
+  - attack.execution
+  - attack.privilege_escalation
+  - attack.t1053.002
+
+logsource:
+  category: process_creation
+  product: windows
+
+detection:
+  selection_1:
+    Image|endswith: '\at.exe'
+  condition: selection_1
+falsepositives:
+  - Legacy scripts on older Windows environments
+  - System administrators on Windows Server 2003-era infrastructure
+level: medium

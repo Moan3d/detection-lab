@@ -1,0 +1,29 @@
+title: Suspicious Scheduled Task XML File Creation
+id: 174e3627-299b-441b-84d9-678af75ca096
+status: experimental
+description: Detects the creation of new files in the Windows Task Scheduler directory, which occurs regardless of whether the task was created via schtasks, WMI, .NET, or PowerShell.
+author: Mohaned Bakri
+date: 2026-09-27
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1053.005
+references:
+    - 'https://attack.mitre.org/techniques/T1053/005/'
+logsource:
+    product: windows
+    category: file_event  
+detection:
+    selection:
+        TargetFilename|contains: '\Windows\System32\Tasks\'
+    filter_legitimate:
+        Image|endswith:
+            - '\svchost.exe'          
+            - '\msiexec.exe'          
+            - '\setup.exe'
+            - '\GoogleUpdate.exe'
+            - '\OneDriveStandaloneUpdater.exe'
+    condition: selection and not filter_legitimate
+falsepositives:
+    - Legitimate software installers or updaters creating scheduled tasks. Requires tuning of the 'filter_legitimate' block.
+level: medium

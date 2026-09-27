@@ -1,0 +1,52 @@
+title: Suspiouse scheduled task
+id: c5cb0255-6fca-42e9-b0ae-fdb3e767d16b
+status: experimental
+description: Detects persistence attempts using schtasks.
+author: Mohaned Bakri
+date: 2026-09-27
+references:
+    - 'https://attack.mitre.org/techniques/T1053/005/'
+    - 'https://redcanary.com/threat-detection-report/techniques/scheduled-task/1'
+    - 'https://ridgelinecyber.com/blog/detecting-malicious-scheduled-tasks/'
+tags:
+    - attack.persistence
+    - attack.execution
+    - attack.privilege-escalation
+    - attack.t1053.005
+
+logsource:
+  category: process_creation
+  product: windows
+
+detection:
+  selection_1:
+    Image|endswith: '\schtasks.exe'
+  selection_create:
+    CommandLine|contains:
+      - '/create'
+      - '-create'
+  selection_sus_connection:
+    CommandLine|contains:
+      - 'http://'
+      - 'https://'
+  selection_sus_path:
+    CommandLine|contains:
+      - '\Users\'
+      - '\Temp\'
+      - '\AppData\'
+      - '\ProgramData\'
+      - '\Public\'
+  selection_sus_commands:
+    CommandLine|contains:
+      - 'FromBase64String'
+      - 'ExecutionPolicy Bypass'
+      - 'cmd.exe'
+      - 'powershell.exe'
+      - 'regsvr32.exe'
+      - 'rundll32.exe'
+      - 'mshta.exe'
+  condition: selection_1 and selection_create and 1 of selection_sus_*
+falsepositives:
+  - tasks running from Users annd temp folders
+  - administrators running taks via powershell
+level: medium

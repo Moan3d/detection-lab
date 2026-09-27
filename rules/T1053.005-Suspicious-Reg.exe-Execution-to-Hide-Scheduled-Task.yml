@@ -1,0 +1,33 @@
+title: Suspicious Reg.exe Execution to Hide Scheduled Task
+id: be3d100f-0f6e-4a95-a148-9d4bcd079819
+status: experimental
+description: Detects the execution of reg.exe attempting to modify the Index value of a scheduled task in the registry to hide it.
+author: Mohaned Bakri
+date: 2026-09-27
+tags:
+    - attack.persistence
+    - attack.privilege-escalation
+    - attack.t1053.005
+references:
+    - 'https://attack.mitre.org/techniques/T1053/005/'
+    - 'https://binarydefense.com/resources/blog/diving-into-hidden-scheduled-tasks'
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection_hide_index:
+        Image|endswith: '\reg.exe'
+        CommandLine|contains|all:
+            - 'Schedule\TaskCache\Tree'
+            - 'Index'
+            - '0x0'
+    selection_delete_sd:
+        Image|endswith: '\reg.exe'
+        CommandLine|contains|all:
+            - 'Schedule\TaskCache\Tree'
+            - 'delete'
+            - 'SD'
+    condition: selection_hide_index or selection_delete_sd
+falsepositives:
+    - Unknown
+level: high
