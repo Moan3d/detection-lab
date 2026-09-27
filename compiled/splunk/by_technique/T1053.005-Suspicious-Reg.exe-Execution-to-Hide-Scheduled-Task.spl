@@ -1,0 +1,1 @@
+(Image="*\\reg.exe" CommandLine="*Schedule\\TaskCache\\Tree*" CommandLine="*Index*" CommandLine="*0x0*") OR (Image="*\\reg.exe" CommandLine="*Schedule\\TaskCache\\Tree*" CommandLine="*delete*" CommandLine="*SD*")

@@ -1,0 +1,1 @@
+Image="*\\schtasks.exe" CommandLine IN ("*/create*", "*-create*") CommandLine IN ("*http://*", "*https://*") OR CommandLine IN ("*\\Users\\*", "*\\Temp\\*", "*\\AppData\\*", "*\\ProgramData\\*", "*\\Public\\*") OR CommandLine IN ("*FromBase64String*", "*ExecutionPolicy Bypass*", "*cmd.exe*", "*powershell.exe*", "*regsvr32.exe*", "*rundll32.exe*", "*mshta.exe*")

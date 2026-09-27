@@ -1,0 +1,1 @@
+TargetFilename="*\\Windows\\System32\\Tasks\\*" NOT (Image IN ("*\\svchost.exe", "*\\msiexec.exe", "*\\setup.exe", "*\\GoogleUpdate.exe", "*\\OneDriveStandaloneUpdater.exe"))
