@@ -1,0 +1,1 @@
+(ParentImage IN ("*powershell.exe", "*cmd.exe", "*wscript.exe", "*mshta.exe") Image IN ("*net.exe", "*net1.exe") CommandLine IN ("*/add*", "*net user*", "*localgroup*", "* $*")) OR (Image="*powershell.exe" CommandLine IN ("*New-LocalUser*", "*Add-LocalGroupMember*", "* $*"))
