@@ -10,7 +10,7 @@ references:
 tags:
   - attack.persistence
   - attack.execution
-  - attack.privilege_escalation
+  - attack.privilege-escalation
   - attack.t1053.002
 
 logsource:

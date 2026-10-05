@@ -1,0 +1,24 @@
+title: Local User Account Created via Security Log
+id: cd18e7e2-f8e6-4d45-b22e-bedc6177a6ae
+status: experimental
+description: Detects local user account creation via Windows Security Event 4720.
+    Accounts ending in $ may indicate hidden machine-account mimicry.
+author: Mohaned Bakri
+date: 2026/10/05
+references:
+    - https://attack.mitre.org/techniques/T1136/001/
+tags:
+    - attack.persistence
+    - attack.t1136.001
+logsource:
+    category: account_creation
+    product: windows
+detection:
+    selection:
+        EventID: 4720
+        SamAccountName|endswith: '$'
+    condition: selection
+falsepositives:
+    - Legitimate computer account provisioning in domain environments
+    - Software installers that create service accounts ending in $
+level: medium

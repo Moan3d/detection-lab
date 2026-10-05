@@ -1,0 +1,39 @@
+title: Hidding Local Account Creation
+id: 63051679-3542-40e4-b12d-bf9a118c4031
+status: experimental
+description: Detects attepts to hide Local Account Creation, by appending $ to the end of username
+author: Mohaned Bakri
+date: 2026/10/5
+references:
+    - https://attack.mitre.org/techniques/T1136/001/
+    - https://web.archive.org/web/20230329153858/https://blog.menasec.net/2019/02/threat-hunting-6-hiding-in-plain-sights_8.html
+tags:
+    - attack.persistence
+    - attack.t1136.001
+
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection1:
+        ParentImage|endswith:
+            - 'powershell.exe'
+            - 'cmd.exe'
+            - 'wscript.exe'
+            - 'mshta.exe'
+        Image|endswith: 
+            - 'net.exe'
+            - 'net1.exe'
+        CommandLine|contains:
+            - '/add'
+            - 'net user'
+            - 'localgroup'
+            - ' $'
+    selection2:
+        Image|endswith: 'powershell.exe'
+        CommandLine|contains:
+            - 'New-LocalUser'
+            - 'Add-LocalGroupMember'
+            - ' $'
+    condition: selection1 or selection2
+level: high

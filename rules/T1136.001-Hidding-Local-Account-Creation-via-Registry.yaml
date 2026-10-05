@@ -1,0 +1,30 @@
+title: Hidding Local Account Creation via Registry Modification
+id: 52bf2611-005e-412d-8596-dcafc7cb9ffd
+status: experimental
+description: Detects attepts to hide Local Account Creation, via Creating a Registry key
+author: Mohaned Bakri
+date: 2026/10/5
+references:
+    - https://attack.mitre.org/techniques/T1136/001/
+    - https://superuser.com/questions/190642/create-hidden-user-account-in-windows-and-should-not-show-document-folder-in-my
+tags:
+    - attack.persistence
+    - attack.t1136.001
+
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    selection1:
+        EventID: 13
+        TargetObject|contains:
+            - 'HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\SpecialAccounts\\UserList'
+        Details|contains:
+            - 'DWORD (0x00000000)'
+    selection2:
+        EventID: 12
+        TargetObject|contains:
+            - 'HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\SpecialAccounts\\UserList'
+
+    condition: selection1 or selection2
+level: high

@@ -1,4 +1,4 @@
-title: Hiding scheduled-task attept
+title: Detects attempts to hide scheduled tasks
 id: 5d57d60d-1c7f-432a-92db-862ef63cdd4a
 status: experimental
 description: detect attepts to hide scheduled-task by manipulating registry 
