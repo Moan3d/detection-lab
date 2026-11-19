@@ -3,7 +3,7 @@ id: a2f93e6a-b4c1-48d2-9e31-7c4f8b2e1d09
 status: experimental
 description: Detects suspicious PowerShell execution patterns used by attackers
     to download and execute code, bypass defenses, or run encoded commands.
-author: Mohaned
+author: Mohaned Bakri
 date: 2026-09-20
 references:
     - https://attack.mitre.org/techniques/T1059/001/

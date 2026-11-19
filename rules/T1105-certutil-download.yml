@@ -1,13 +1,16 @@
 title: certutil Ingress Tool Transfer detection
 id: 74227de8-7439-4168-8472-211d14f690d4
-status: expremintal
+status: test
 description: detecting certutil, which is a post-exploitation technique to import a tooling into compromised machine
 author: Mohaned Bakri
 date: 2026-11-01
-reference: 
+reference:
+  - https://redcanary.com/threat-detection-report/techniques/ingress-tool-transfer/
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1105/T1105.md
+  - https://lolbas-project.github.io
 tags:
-
-
+  - attack.command-and-control
+  - attack.t1105
 logsource:
   category: process_creation
   product: windows
@@ -27,6 +30,7 @@ falsepositives:
 level: high
 
 ---
+title: certutil file creation
 id: 0b95b10f-3d19-4af0-b0a2-a7c6bb899dd2
 logsource:
   category: file_creation
@@ -41,7 +45,7 @@ detection:
 ---
 
 action: correlation
-id: a1a2b3c4-3333-4a7a-bbbb-000000000003
+id: d2641c2d-fd03-46b6-8773-445d78ab7448
 title: Certutil Ingress Download Followed by File Creation
 description: Detects certutil downloading a file from a URL, immediately followed by the creation of an executable script or binary within 10 seconds.
 type: temporal
