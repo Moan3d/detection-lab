@@ -1,7 +1,7 @@
-title: certutil Ingress Tool Transfer detection
+title: Certutil Ingress Tool Transfer Detection
 id: 74227de8-7439-4168-8472-211d14f690d4
 status: test
-description: detecting certutil, which is a post-exploitation technique to import a tooling into compromised machine
+description: Detects certutil execution with download flags used to transfer external tools onto a compromised machine.
 author: Mohaned Bakri
 date: 2026-11-01
 references:
@@ -26,35 +26,51 @@ detection:
       - '-URL'
   condition: selection_1
 falsepositives:
-    - Administraive tasks
+  - Administrative tasks
 level: high
 
 ---
-title: certutil file creation
+
+title: Certutil File Creation
 id: 0b95b10f-3d19-4af0-b0a2-a7c6bb899dd2
+status: test
+description: Detects file creation events initiated by certutil.exe.
+author: Mohaned Bakri
+date: 2026-11-01
 logsource:
   category: file_creation
   product: windows
 detection:
   selection_1:
-    Image|endswith: 'certutil.exe'
+    Image|endswith: '\certutil.exe'
   condition: selection_1
-
-# i can a add a extintion with 'TargetFilename|endswith: '.exe' or '.ps1' but i see no need because the act of certutil downloading anything is high severity alert and needs verification regardless of it's extintion or destination
+level: medium
 
 ---
 
-action: correlation
-id: d2641c2d-fd03-46b6-8773-445d78ab7448
 title: Certutil Ingress Download Followed by File Creation
-description: Detects certutil downloading a file from a URL, immediately followed by the creation of an executable script or binary within 10 seconds.
-type: temporal
-rule:
+id: d2641c2d-fd03-46b6-8773-445d78ab7448
+status: test
+description: Detects certutil downloading a file from a URL, immediately followed by file creation within 10 seconds.
+author: Mohaned Bakri
+date: 2026-11-01
+tags:
+  - attack.command-and-control
+  - attack.t1105
+correlation:
+  type: temporal_ordered
+  rules:
     - 74227de8-7439-4168-8472-211d14f690d4
     - 0b95b10f-3d19-4af0-b0a2-a7c6bb899dd2
+  group-by:
+    - Computer
+    - ProcessId
+  timespan: 10s
+  aliases:
+    certutil_proc:
+      74227de8-7439-4168-8472-211d14f690d4: ProcessId
+    certutil_file:
+      0b95b10f-3d19-4af0-b0a2-a7c6bb899dd2: ProcessId
+  condition: certutil_proc then certutil_file
 generate: true
-timespan: 10s
-aliases:
-    certutil_proc: 74227de8-7439-4168-8472-211d14f690d4
-    certutil_file: 0b95b10f-3d19-4af0-b0a2-a7c6bb899dd2
-condition: certutil_proc then certutil_file
+level: high
