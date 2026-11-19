@@ -10,6 +10,8 @@ Image="*\\at.exe"
 
 TargetFilename="*\\Windows\\System32\\Tasks\\*" NOT (Image IN ("*\\svchost.exe", "*\\msiexec.exe", "*\\setup.exe", "*\\GoogleUpdate.exe", "*\\OneDriveStandaloneUpdater.exe"))
 
+(ParentImage IN ("*powershell.exe", "*cmd.exe", "*wscript.exe", "*mshta.exe") Image IN ("*net.exe", "*net1.exe") CommandLine IN ("*/add*", "*net user*", "*localgroup*", "* $*")) OR (Image="*powershell.exe" CommandLine IN ("*New-LocalUser*", "*Add-LocalGroupMember*", "* $*"))
+
 (Image IN ("*\\powershell.exe", "*\\pwsh.exe") CommandLine IN ("*-EncodedCommand*", "*-enc *", "*DownloadString*", "*IEX*", "*Invoke-Expression*", "*-WindowStyle Hidden*", "*Net.WebClient*", "*FromBase64String*", "*-NonInteractive*", "*bypass*", "*Invoke-WebRequest*", "*-NoLogo*")) OR (Image IN ("*\\powershell.exe", "*\\pwsh.exe") CommandLine="*-w *" CommandLine="*hidden*")
 
 (TargetImage="*\\lsass.exe" GrantedAccess IN ("*0x1010*", "*0x1410*", "*0x1418*", "*0x143a*", "*0x1438*", "*0x1f0fff*", "*0x1f1fff*", "*0x1f3fff*")) OR (TargetImage="*\\lsass.exe" SourceImage IN ("*powershell.exe", "*\\mimikatz.exe", "*\\procdump.exe", "*\\procdump64.exe", "*\\sqldumper.exe", "*\\wce.exe", "*\\wce64.exe", "*\\wce32.exe")) NOT (SourceImage IN ("*\\MRT.exe", "*\\wininit.exe", "*\\wmiprvse.exe", "*\\csrss.exe", "*\\lsm.exe", "*\\msiexec.exe"))
