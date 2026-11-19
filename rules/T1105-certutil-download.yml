@@ -68,5 +68,4 @@ correlation:
     - Computer
     - ProcessId
   timespan: 10s
-  condition: certutil_proc and certutil_file
 level: high
