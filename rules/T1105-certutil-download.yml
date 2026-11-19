@@ -1,0 +1,56 @@
+title: certutil Ingress Tool Transfer detection
+id: 74227de8-7439-4168-8472-211d14f690d4
+status: expremintal
+description: detecting certutil, which is a post-exploitation technique to import a tooling into compromised machine
+author: Mohaned Bakri
+date: 2026-11-01
+reference: 
+tags:
+
+
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_1:
+    Image|endswith: '\certutil.exe'
+    CommandLine|contains:
+      - '-urlcache'
+      - '-split'
+      - '/urlcache'
+      - '-verifyctl'
+      - '/verifyctl'
+      - '-URL'
+  condition: selection_1
+falsepositives:
+    - Administraive tasks
+level: high
+
+---
+id: 0b95b10f-3d19-4af0-b0a2-a7c6bb899dd2
+logsource:
+  category: file_creation
+  product: windows
+detection:
+  selection_1:
+    Image|endswith: 'certutil.exe'
+  condition: selection_1
+
+# i can a add a extintion with 'TargetFilename|endswith: '.exe' or '.ps1' but i see no need because the act of certutil downloading anything is high severity alert and needs verification regardless of it's extintion or destination
+
+---
+
+action: correlation
+id: a1a2b3c4-3333-4a7a-bbbb-000000000003
+title: Certutil Ingress Download Followed by File Creation
+description: Detects certutil downloading a file from a URL, immediately followed by the creation of an executable script or binary within 10 seconds.
+type: temporal
+rule:
+    - 74227de8-7439-4168-8472-211d14f690d4
+    - 0b95b10f-3d19-4af0-b0a2-a7c6bb899dd2
+generate: true
+timespan: 10s
+aliases:
+    certutil_proc: 74227de8-7439-4168-8472-211d14f690d4
+    certutil_file: 0b95b10f-3d19-4af0-b0a2-a7c6bb899dd2
+condition: certutil_proc then certutil_file

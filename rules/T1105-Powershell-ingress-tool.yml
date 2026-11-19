@@ -1,0 +1,50 @@
+title: Ingress Tool Transfer detection
+id:
+status: expremintal
+description: detecting T1105, which is a post-exploitation technique to import a tooling into compromised machine
+author: Mohaned Bakri
+date: 2026-11-01
+reference: 
+tags:
+
+
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_1:
+    Image|endswith: '\powershell.exe'
+    CommandLine|contains:
+      - 'New-Object Net.WebClient'
+      - 'Invoke-WebRequest'
+      - 'DownloadFile'
+      - 'DownloadString'
+      - 'iwr'
+      - 'client.GetAsync'
+      - 'WriteAllBytes'
+  selection_2:
+    Image|endswith: '\cmd.exe'
+    CommandLine|contains:
+      - 'New-Object Net.WebClient'
+      - 'Invoke-WebRequest'
+      - 'DownloadFile'
+      - 'DownloadString'
+      - 'iwr'
+  condition: selection_*
+falsepositives:
+    - Administraive tasks
+level: medium
+
+C# and PowerShell are effectively just frontends for the .NET
+We are taking advantage of the fact that we can use C# executables to directly call the same .NET functionality that is accessed by PowerShell
+
+
+
+
+
+
+
+
+
+
+

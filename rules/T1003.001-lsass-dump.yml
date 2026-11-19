@@ -1,9 +1,9 @@
 title: LSASS Memory Access - Credential Dumping
 id: 5ef4e3d6-c873-4ae2-a15a-74aa9de5b530
 status: experimental
-description: Detects attempts to access LSASS process memory for credential
-    dumping using tools like Mimikatz, ProcDump, or WCE.
-    Covers process access rights, known dump tools.
+description: Detects processes opening LSASS with access rights commonly used for
+    credential dumping, or known dumping tools (Mimikatz, ProcDump, SQLDumper, WCE)
+    accessing LSASS. Requires Sysmon Event ID 10 logging for lsass.exe.
 author: Mohaned Bakri
 date: 2026-09-21
 references:
@@ -19,7 +19,7 @@ logsource:
 detection:
     selection_suspicious_access:
         TargetImage|endswith: '\lsass.exe'
-        GrantedAccess|contains:
+        GrantedAccess:
             - '0x1010'
             - '0x1410'
             - '0x1418'
@@ -31,7 +31,7 @@ detection:
     selection_known_tools:
         TargetImage|endswith: '\lsass.exe'
         SourceImage|endswith:
-            - 'powershell.exe'
+            - '\powershell.exe'
             - '\mimikatz.exe'
             - '\procdump.exe'
             - '\procdump64.exe'
@@ -39,15 +39,17 @@ detection:
             - '\wce.exe'
             - '\wce64.exe'
             - '\wce32.exe'
-    filter_legitimate:
-        SourceImage|endswith:
-            - '\MRT.exe'
-            - '\wininit.exe'
-            - '\wmiprvse.exe'
-            - '\csrss.exe'
-            - '\lsm.exe'
-            - '\msiexec.exe'
-    condition: (selection_suspicious_access or selection_known_tools) and not filter_legitimate
+    filter_main_system:
+        SourceImage:
+            - 'C:\Windows\System32\wininit.exe'
+            - 'C:\Windows\System32\csrss.exe'
+            - 'C:\Windows\System32\lsm.exe'
+            - 'C:\Windows\System32\wbem\WmiPrvSE.exe'
+            - 'C:\Windows\System32\MRT.exe'
+    filter_main_defender:
+        SourceImage|startswith: 'C:\ProgramData\Microsoft\Windows Defender\Platform\'
+        SourceImage|endswith: '\MsMpEng.exe'
+    condition: (selection_suspicious_access or selection_known_tools) and not 1 of filter_main_*
 falsepositives:
     - Security software and antivirus engines legitimately accessing LSASS
     - Windows Defender platform processes

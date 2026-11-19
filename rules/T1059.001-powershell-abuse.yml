@@ -14,31 +14,32 @@ logsource:
     category: process_creation
     product: windows
 detection:
-    selection_suspicious_args:
-        Image|endswith:
+    selection_img:
+        - Image|endswith:
             - '\powershell.exe'
             - '\pwsh.exe'
+        - OriginalFileName:
+            - 'PowerShell.EXE'
+            - 'pwsh.dll'
+    selection_encoded:
+        CommandLine|contains|windash:
+            - ' -e '
+            - ' -en '
+            - ' -enc '
+            - ' -enco'
+            - ' -ec '
+    selection_cradle_download:
         CommandLine|contains:
-            - '-EncodedCommand'
-            - '-enc '
             - 'DownloadString'
+            - 'DownloadData'
+            - 'Net.WebClient'
+            - 'Invoke-WebRequest'
+            - 'iwr '
+    selection_cradle_exec:
+        CommandLine|contains:
             - 'IEX'
             - 'Invoke-Expression'
-            - '-WindowStyle Hidden'
-            - 'Net.WebClient'
-            - 'FromBase64String'
-            - '-NonInteractive'
-            - 'bypass'
-            - 'Invoke-WebRequest'
-            - '-NoLogo'
-    selection_hidden:
-        Image|endswith:
-            - '\powershell.exe'
-            - '\pwsh.exe'
-        CommandLine|contains|all:
-            - '-w '
-            - 'hidden'
-    condition: selection_suspicious_args or selection_hidden
+    condition: selection_img and (selection_encoded or (selection_cradle_download and selection_cradle_exec))
 falsepositives:
     - Legitimate admin scripts
     - Software installers

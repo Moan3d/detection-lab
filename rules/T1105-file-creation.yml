@@ -1,0 +1,36 @@
+title: certutil Ingress Tool Transfer detection
+id: 
+status: expremintal
+description: detecting certutil, which is a post-exploitation technique to import a tooling into compromised machine
+author: Mohaned Bakri
+date: 2026-11-01
+reference: 
+tags:
+
+logsource:
+  category: file_creation
+  product: windows
+detection:
+  selection_1:
+    Image|endswith:
+      - '\certoc.exe'
+      - '\AppInstaller.exe'
+      - '\CertReq.exe'
+      - '\cmdl32.exe'
+      - '\ConfigSecurityPolicy.exe'
+      - '\Desktopimgdownldr.exe'
+      - '\Diantz.exe'
+      - '\Finger.exe'
+      - '\Findstr.exe'
+      - '\Extrac32.exe'
+      - '\Expand.exe'
+      - '\Esentutl.exe'
+      - '\Ftp.exe'
+      - '\Hh.exe'
+      - '\IMEWDBLD.exe'
+      - '\Ieexec.exe'
+      - '\Makecab.exe'
+      - '\Installutil.exe'
+  condition: selection_1
+level: low
+# puting a lot of binaries in the same sigma rule will generate a lot of alerts and falsepositives, each one of them needs a saparet sigma rule, this could be a futur project 

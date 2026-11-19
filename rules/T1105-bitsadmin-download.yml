@@ -1,0 +1,25 @@
+title: bitsadmin Ingress Tool Transfer detection
+id:
+status: expremintal
+description: detecting bitsadmin Ingress Tool Transfer, which is a post-exploitation technique to import a tooling into compromised machine
+author: Mohaned Bakri
+date: 2026-11-01
+reference: 
+tags:
+
+
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_1:
+    Image|endswith: '\bitsadmin.exe'
+    CommandLine|contains:
+      - '/transfer'
+      - '/create'
+      - '/addfile'
+      - '/setnotifycmdline'
+  condition: selection_1
+falsepositives:
+    - Administraive tasks
+level: medium

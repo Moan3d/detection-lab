@@ -2,7 +2,7 @@ title: Known Malicious Cmdlets
 id: a38c0683-3ad0-47dc-b6f3-d3d3dc3e51ce 
 status: experimental
 description: Detects known malicious PowerShell cmdlets used by attackers, including PowerSploit, PowerView, and Mimikatz invocations.
-author: Mohaned Bakri 
+author: Mohaned Bakri
 date: 2026-09-21
 references:
     - https://attack.mitre.org/techniques/T1059/001/
@@ -11,14 +11,19 @@ tags:
     - attack.execution
     - attack.t1059.001
 logsource:
-    category: process_creation
+    category: ps_script
     product: windows
+    definition: 'Requirements: Script Block Logging must be enabled'
 detection:
-    selection:
-        Image|endswith:
+    selection_img:
+        - Image|endswith:
             - '\powershell.exe'
             - '\pwsh.exe'
-        CommandLine|contains:
+        - OriginalFileName:
+            - 'PowerShell.EXE'
+            - 'pwsh.dll'
+    selection_cmd:
+        ScriptBlockText|contains:
             - 'Add-Persistence'
             - 'Find-AVSignature'
             - 'Get-GPPAutologon'
@@ -54,5 +59,8 @@ detection:
             - 'Remove-VolumeShadowCopy'
             - 'Set-CriticalProcess'
             - 'Set-MasterBootRecord'
-    condition: selection
+    condition: all of selection_*
+falsepositives:
+    - Red team or authorized penetration testing activity
+    - Short names such as PowerUp or Get-HttpStatus matching unrelated paths or admin scripts
 level: high
