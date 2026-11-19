@@ -1,0 +1,1 @@
+(Image="*\\powershell.exe" (CommandLine IN ("*New-Object Net.WebClient*", "*Invoke-WebRequest*", "*DownloadFile*", "*DownloadString*", "*iwr*", "*client.GetAsync*", "*WriteAllBytes*"))) OR (Image="*\\cmd.exe" (CommandLine IN ("*New-Object Net.WebClient*", "*Invoke-WebRequest*", "*DownloadFile*", "*DownloadString*", "*iwr*")))

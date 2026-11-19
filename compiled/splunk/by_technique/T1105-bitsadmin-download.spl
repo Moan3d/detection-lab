@@ -1,0 +1,1 @@
+Image="*\\bitsadmin.exe" (CommandLine IN ("*/transfer*", "*/create*", "*/addfile*", "*/setnotifycmdline*"))

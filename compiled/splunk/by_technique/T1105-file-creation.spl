@@ -1,0 +1,1 @@
+Image IN ("*\\certoc.exe", "*\\AppInstaller.exe", "*\\CertReq.exe", "*\\cmdl32.exe", "*\\ConfigSecurityPolicy.exe", "*\\Desktopimgdownldr.exe", "*\\Diantz.exe", "*\\Finger.exe", "*\\Findstr.exe", "*\\Extrac32.exe", "*\\Expand.exe", "*\\Esentutl.exe", "*\\Ftp.exe", "*\\Hh.exe", "*\\IMEWDBLD.exe", "*\\Ieexec.exe", "*\\Makecab.exe", "*\\Installutil.exe")
