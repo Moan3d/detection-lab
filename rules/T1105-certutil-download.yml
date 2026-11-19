@@ -1,13 +1,14 @@
 title: Certutil Ingress Tool Transfer Detection
+name: certutil_proc
 id: 74227de8-7439-4168-8472-211d14f690d4
 status: test
 description: Detects certutil execution with download flags used to transfer external tools onto a compromised machine.
 author: Mohaned Bakri
 date: 2026-11-01
 references:
-  - https://redcanary.com/threat-detection-report/techniques/ingress-tool-transfer/
-  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1105/T1105.md
-  - https://lolbas-project.github.io
+  - https://redcanary.com
+  - https://github.com
+  - https://github.io
 tags:
   - attack.command-and-control
   - attack.t1105
@@ -32,6 +33,7 @@ level: high
 ---
 
 title: Certutil File Creation
+name: certutil_file
 id: 0b95b10f-3d19-4af0-b0a2-a7c6bb899dd2
 status: test
 description: Detects file creation events initiated by certutil.exe.
@@ -60,17 +62,11 @@ tags:
 correlation:
   type: temporal_ordered
   rules:
-    - 74227de8-7439-4168-8472-211d14f690d4
-    - 0b95b10f-3d19-4af0-b0a2-a7c6bb899dd2
+    - certutil_proc
+    - certutil_file
   group-by:
     - Computer
     - ProcessId
   timespan: 10s
-  aliases:
-    certutil_proc:
-      74227de8-7439-4168-8472-211d14f690d4: ProcessId
-    certutil_file:
-      0b95b10f-3d19-4af0-b0a2-a7c6bb899dd2: ProcessId
-  condition: certutil_proc then certutil_file
-generate: true
+  condition: certutil_proc and certutil_file
 level: high
