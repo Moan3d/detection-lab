@@ -8,16 +8,16 @@ Image="*\\rundll32.exe" CommandLine="*comsvcs.dll*" CommandLine="*MiniDump*"
 
 (Image IN ("*\\powershell.exe", "*\\pwsh.exe") OR OriginalFileName IN ("PowerShell.EXE", "pwsh.dll")) (CommandLine="* -e *" OR CommandLine="* /e *" OR CommandLine="* –e *" OR CommandLine="* —e *" OR CommandLine="* ―e *" OR CommandLine="* -en *" OR CommandLine="* /en *" OR CommandLine="* –en *" OR CommandLine="* —en *" OR CommandLine="* ―en *" OR CommandLine="* -enc *" OR CommandLine="* /enc *" OR CommandLine="* –enc *" OR CommandLine="* —enc *" OR CommandLine="* ―enc *" OR CommandLine="* -enco*" OR CommandLine="* /enco*" OR CommandLine="* –enco*" OR CommandLine="* —enco*" OR CommandLine="* ―enco*" OR CommandLine="* -ec *" OR CommandLine="* /ec *" OR CommandLine="* –ec *" OR CommandLine="* —ec *" OR CommandLine="* ―ec *" OR ((CommandLine IN ("*DownloadString*", "*DownloadData*", "*Net.WebClient*", "*Invoke-WebRequest*", "*iwr *")) (CommandLine IN ("*IEX*", "*Invoke-Expression*"))))
 
-Image="*\\bitsadmin.exe" (CommandLine IN ("*/transfer*", "*/create*", "*/addfile*", "*/setnotifycmdline*"))
+(Image="*\\bitsadmin.exe" OR OriginalFileName="bitsadmin.exe") (CommandLine="*-transfer*" OR CommandLine="*/transfer*" OR CommandLine="*–transfer*" OR CommandLine="*—transfer*" OR CommandLine="*―transfer*" OR CommandLine="*-addfile*" OR CommandLine="*/addfile*" OR CommandLine="*–addfile*" OR CommandLine="*—addfile*" OR CommandLine="*―addfile*")
 
 TargetFilename="*\\Windows\\System32\\Tasks\\*" NOT (Image IN ("*\\svchost.exe", "*\\msiexec.exe", "*\\setup.exe", "*\\GoogleUpdate.exe", "*\\OneDriveStandaloneUpdater.exe"))
 
 EventCode=4720 SamAccountName="*$"
 
-(Image="*\\powershell.exe" (CommandLine IN ("*New-Object Net.WebClient*", "*Invoke-WebRequest*", "*DownloadFile*", "*DownloadString*", "*iwr*", "*client.GetAsync*", "*WriteAllBytes*"))) OR (Image="*\\cmd.exe" (CommandLine IN ("*New-Object Net.WebClient*", "*Invoke-WebRequest*", "*DownloadFile*", "*DownloadString*", "*iwr*")))
+(Image IN ("*\\powershell.exe", "*\\pwsh.exe") OR OriginalFileName IN ("PowerShell.EXE", "pwsh.dll")) (CommandLine IN ("*New-Object Net.WebClient*", "*Invoke-WebRequest*", "*DownloadFile*", "*client.GetAsync*", "* iwr *", "*WriteAllBytes*")) (CommandLine IN ("*http://*", "*https://*", "*ftp://*"))
 
 | multisearch
-[ search Image="*\\certutil.exe" (CommandLine IN ("*-urlcache*", "*-split*", "*/urlcache*", "*-verifyctl*", "*/verifyctl*", "*-URL*")) | eval event_type="certutil_proc" ]
+[ search (Image="*\\certutil.exe" OR OriginalFileName="CertUtil.exe") (CommandLine="*-urlcache*" OR CommandLine="*/urlcache*" OR CommandLine="*–urlcache*" OR CommandLine="*—urlcache*" OR CommandLine="*―urlcache*" OR CommandLine="*-split*" OR CommandLine="*/split*" OR CommandLine="*–split*" OR CommandLine="*—split*" OR CommandLine="*―split*" OR CommandLine="*-verifyctl*" OR CommandLine="*/verifyctl*" OR CommandLine="*–verifyctl*" OR CommandLine="*—verifyctl*" OR CommandLine="*―verifyctl*") | eval event_type="certutil_proc" ]
 [ search Image="*\\certutil.exe" | eval event_type="certutil_file" ]
 
 | bin _time span=10s
@@ -37,5 +37,3 @@ EventCode=4720 SamAccountName="*$"
 ((ParentImage IN ("*powershell.exe", "*cmd.exe", "*wscript.exe", "*mshta.exe")) (Image IN ("*net.exe", "*net1.exe")) (CommandLine IN ("*/add*", "*net user*", "*localgroup*", "* $*"))) OR (Image="*powershell.exe" (CommandLine IN ("*New-LocalUser*", "*Add-LocalGroupMember*", "* $*")))
 
 Image="*\\schtasks.exe" (CommandLine IN ("*/create*", "*-create*")) (CommandLine IN ("*http://*", "*https://*") OR CommandLine IN ("*\\Users\\*", "*\\Temp\\*", "*\\AppData\\*", "*\\ProgramData\\*", "*\\Public\\*") OR CommandLine IN ("*FromBase64String*", "*ExecutionPolicy Bypass*", "*cmd.exe*", "*powershell.exe*", "*regsvr32.exe*", "*rundll32.exe*", "*mshta.exe*"))
-
-Image IN ("*\\certoc.exe", "*\\AppInstaller.exe", "*\\CertReq.exe", "*\\cmdl32.exe", "*\\ConfigSecurityPolicy.exe", "*\\Desktopimgdownldr.exe", "*\\Diantz.exe", "*\\Finger.exe", "*\\Findstr.exe", "*\\Extrac32.exe", "*\\Expand.exe", "*\\Esentutl.exe", "*\\Ftp.exe", "*\\Hh.exe", "*\\IMEWDBLD.exe", "*\\Ieexec.exe", "*\\Makecab.exe", "*\\Installutil.exe")
