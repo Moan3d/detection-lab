@@ -1,6 +1,6 @@
 title: lolbas Ingress Tool Transfer detection
 id: 46163746-b214-4ab9-be0c-c03328f60531
-status: test
+status: experimental
 description: detecting lolbas apps that used in ingress tool Transfer, which is a post-exploitation technique to import a tooling into compromised machine
 author: Mohaned Bakri
 date: 2026-11-01

@@ -1,6 +1,6 @@
-title: powershell tool downlowd detection
+title: Powershell Tool Download Detection
 id: 0e003e97-89a8-4b25-8078-ed1cc2ae6edb
-status: test
+status: experimental
 description: detecting T1105, which is a post-exploitation technique to import a tooling into compromised machine
 author: Mohaned Bakri
 date: 2026-11-01
@@ -15,30 +15,31 @@ logsource:
   category: process_creation
   product: windows
 detection:
-  selection_1:
-    Image|endswith: '\powershell.exe'
+  selection_img:
+      - Image|endswith:
+          - '\powershell.exe'
+          - '\pwsh.exe'
+      - OriginalFileName:
+          - 'PowerShell.EXE'
+          - 'pwsh.dll'
+  selection_method:
     CommandLine|contains:
       - 'New-Object Net.WebClient'
       - 'Invoke-WebRequest'
       - 'DownloadFile'
-      - 'DownloadString'
-      - 'iwr'
       - 'client.GetAsync'
+      - ' iwr '
       - 'WriteAllBytes'
-  selection_2:
-    Image|endswith: '\cmd.exe'
+  selection_url:
     CommandLine|contains:
-      - 'New-Object Net.WebClient'
-      - 'Invoke-WebRequest'
-      - 'DownloadFile'
-      - 'DownloadString'
-      - 'iwr'
-  condition: 1 of selection_*
+      - 'http://'
+      - 'https://'
+      - 'ftp://'
+
+  condition: all of selection_*
 falsepositives:
     - Administraive tasks
 level: medium
-
-#C# and PowerShell are effectively just frontends for the .NET We are taking advantage of the fact that we can use C# executables to directly call the same .NET functionality that is accessed by PowerShell
 
 
 
