@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install sigma-cli
-        run: pip install sigma-cli pySigma-backend-splunk
+        run: pip install sigma-cli pySigma-backend-splunk pysigma-pipeline-sysmon
 
       - name: Validate all rules
         run: sigma check rules/
@@ -28,13 +28,13 @@ jobs:
           mkdir -p compiled/splunk/by_technique
 
           # Combined file
-          sigma convert -t splunk -p splunk_windows rules/ \
+          sigma convert -t splunk -p sysmon -p splunk_windows rules/ \
             > compiled/splunk/all_rules.spl
 
           # Individual files
           for rule in rules/*.yml; do
             name=$(basename "$rule" .yml)
-            sigma convert -t splunk -p splunk_windows "$rule" \
+            sigma convert -t splunk -p sysmon -p splunk_windows "$rule" \
               > "compiled/splunk/by_technique/${name}.spl"
           done
       - name: Commit compiled rules back to repo
