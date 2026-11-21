@@ -1,1 +1,1 @@
-Image="*\\at.exe"
+source="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1 Image="*\\at.exe"

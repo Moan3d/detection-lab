@@ -1,5 +1,5 @@
 | multisearch
-[ search (Image="*\\certutil.exe" OR OriginalFileName="CertUtil.exe") (CommandLine="*-urlcache*" OR CommandLine="*/urlcache*" OR CommandLine="*–urlcache*" OR CommandLine="*—urlcache*" OR CommandLine="*―urlcache*" OR CommandLine="*-split*" OR CommandLine="*/split*" OR CommandLine="*–split*" OR CommandLine="*—split*" OR CommandLine="*―split*" OR CommandLine="*-verifyctl*" OR CommandLine="*/verifyctl*" OR CommandLine="*–verifyctl*" OR CommandLine="*—verifyctl*" OR CommandLine="*―verifyctl*") | eval event_type="certutil_proc" ]
+[ search source="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1 (Image="*\\certutil.exe" OR OriginalFileName="CertUtil.exe") (CommandLine="*-urlcache*" OR CommandLine="*/urlcache*" OR CommandLine="*–urlcache*" OR CommandLine="*—urlcache*" OR CommandLine="*―urlcache*" OR CommandLine="*-split*" OR CommandLine="*/split*" OR CommandLine="*–split*" OR CommandLine="*—split*" OR CommandLine="*―split*" OR CommandLine="*-verifyctl*" OR CommandLine="*/verifyctl*" OR CommandLine="*–verifyctl*" OR CommandLine="*—verifyctl*" OR CommandLine="*―verifyctl*") | eval event_type="certutil_proc" ]
 [ search Image="*\\certutil.exe" | eval event_type="certutil_file" ]
 
 | bin _time span=10s

@@ -1,1 +1,1 @@
-(Image IN ("*\\powershell.exe", "*\\pwsh.exe")) (CommandLine IN ("*Register-ScheduledTask*", "*New-ScheduledTaskAction*", "*PS_ScheduledTask*", "*Invoke-CimMethod*", "*New-ScheduledTaskAction*"))
+source="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1 (Image IN ("*\\powershell.exe", "*\\pwsh.exe")) (CommandLine IN ("*Register-ScheduledTask*", "*New-ScheduledTaskAction*", "*PS_ScheduledTask*", "*Invoke-CimMethod*", "*New-ScheduledTaskAction*"))
