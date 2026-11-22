@@ -39,9 +39,9 @@ description: Detects file creation events initiated by certutil.exe.
 author: Mohaned Bakri
 date: 2026-11-01
 logsource:
-  category: file_creation
+  category: file_event
   product: windows
-  definition: 'Requirements: Sysmon Event ID 11 must be enbled'
+  definition: 'Requirements: Sysmon Event ID 11 must be enabled'
 detection:
   selection_1:
     Image|endswith: '\certutil.exe'
