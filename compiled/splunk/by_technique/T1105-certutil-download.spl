@@ -2,8 +2,7 @@
 [ search source="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1 (Image="*\\certutil.exe" OR OriginalFileName="CertUtil.exe") (CommandLine="*-urlcache*" OR CommandLine="*/urlcache*" OR CommandLine="*–urlcache*" OR CommandLine="*—urlcache*" OR CommandLine="*―urlcache*" OR CommandLine="*-split*" OR CommandLine="*/split*" OR CommandLine="*–split*" OR CommandLine="*—split*" OR CommandLine="*―split*" OR CommandLine="*-verifyctl*" OR CommandLine="*/verifyctl*" OR CommandLine="*–verifyctl*" OR CommandLine="*—verifyctl*" OR CommandLine="*―verifyctl*") | eval event_type="certutil_proc" ]
 [ search Image="*\\certutil.exe" | eval event_type="certutil_file" ]
 
-| bin _time span=10s
-| stats dc(event_type) as event_type_count earliest(eval(if(event_type="certutil_proc",_time,null()))) as first_certutil_proc earliest(eval(if(event_type="certutil_file",_time,null()))) as first_certutil_file by _time Computer ProcessId
+| bin _time span=2m
+| stats dc(event_type) as event_type_count by _time Computer ProcessId
 
 | search event_type_count >= 2
-| where first_certutil_proc < first_certutil_file
