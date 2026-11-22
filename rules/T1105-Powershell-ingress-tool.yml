@@ -24,7 +24,6 @@ detection:
           - 'pwsh.dll'
   selection_method:
     CommandLine|contains:
-      - 'New-Object Net.WebClient'
       - 'Invoke-WebRequest'
       - 'DownloadFile'
       - 'client.GetAsync'

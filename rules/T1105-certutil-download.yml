@@ -60,12 +60,12 @@ tags:
   - attack.command-and-control
   - attack.t1105
 correlation:
-  type: temporal_ordered
+  type: temporal
   rules:
     - certutil_proc
     - certutil_file
   group-by:
     - Computer
     - ProcessId
-  timespan: 10s
+  timespan: 2m
 level: high
